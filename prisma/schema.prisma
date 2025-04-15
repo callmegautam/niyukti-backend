@@ -15,11 +15,27 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  name          String
+  email         String   @unique
+  password      String
+  course        String
+  admissionYear Int?
+  currentYear   Int?
+  gradYear      Int?
+  collegeId     Int?
+  college       College? @relation(fields: [collegeId], references: [id])
+  githubUrl     String?
+  resumeUrl     String?
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model College {
+  id       Int    @id @default(autoincrement())
+  name     String
+  location String
+  users    User[]
 }
