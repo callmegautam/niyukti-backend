@@ -1,4 +1,4 @@
-import { prisma } from '../db/db';
+import { prisma } from '../db/db.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { checkExistingUser } from '../utils/checkExistingUser.js';
 
@@ -11,4 +11,22 @@ export const registerUser = asyncHandler(async (req, res) => {
             message: 'User already exists with this email or username',
         });
     }
+    const user = await prisma.user.create({
+        data: {
+            username,
+            name,
+            email,
+            password,
+        },
+    });
+    return res.status(201).json({
+        success: true,
+        message: 'User created successfully',
+        data: {
+            id: user.id,
+            username: user.username,
+            name: user.name,
+            email: user.email,
+        },
+    });
 });
