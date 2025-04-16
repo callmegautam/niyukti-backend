@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "./generated/prisma"
@@ -14,23 +8,57 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum VerificationStatus {
+  PENDING
+  AUTO_VERIFIED
+  MANUAL_REVIEW
+  VERIFIED
+  REJECTED
+}
+
 model User {
-  id            Int      @id @default(autoincrement())
-  username      String   @unique
-  name          String
-  email         String   @unique
-  password      String
-  course        String
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+
+  username String  @unique
+  name     String
+  course   String?
+
   admissionYear Int?
   currentYear   Int?
   gradYear      Int?
-  collegeId     Int?
-  college       College? @relation(fields: [collegeId], references: [id])
-  githubUrl     String?
-  resumeUrl     String?
-  avatarUrl     String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+
+  collegeId Int?
+  college   College? @relation(fields: [collegeId], references: [id])
+
+  githubUrl String?
+  resumeUrl String?
+  avatarUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Company {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+
+  companyName String
+  domain      String
+  description String?
+  website     String?
+  address     String?
+
+  linkedinUrl String?
+  logoUrl     String?
+
+  isVerified         Boolean            @default(false)
+  verificationStatus VerificationStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model College {
