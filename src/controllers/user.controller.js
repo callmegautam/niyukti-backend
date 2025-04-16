@@ -78,6 +78,13 @@ export const getAllUsers = asyncHandler(async (req, res) => {
 
 export const getUserById = asyncHandler(async (req, res) => {
     const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({
+            success: false,
+            message: 'id is required',
+            data: null,
+        });
+    }
     const user = await prisma.user.findUnique({
         where: {
             id,
@@ -99,6 +106,13 @@ export const getUserById = asyncHandler(async (req, res) => {
 
 export const updateUser = asyncHandler(async (req, res) => {
     const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({
+            success: false,
+            message: 'id is required',
+            data: null,
+        });
+    }
     const {
         username,
         name,
