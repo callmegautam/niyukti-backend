@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@prisma/client':
-        specifier: ^6.6.0
+        specifier: 6.6.0
         version: 6.6.0(prisma@6.6.0)
       bcrypt:
         specifier: ^5.1.1
@@ -29,9 +29,6 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
-      prisma:
-        specifier: ^6.6.0
-        version: 6.6.0
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -39,6 +36,9 @@ importers:
       nodemon:
         specifier: ^3.1.9
         version: 3.1.9
+      prisma:
+        specifier: ^6.6.0
+        version: 6.6.0
 
 packages:
 
