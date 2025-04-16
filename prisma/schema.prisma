@@ -46,7 +46,7 @@ model Company {
   password String
 
   companyName String
-  domain      String
+  domain      String  @unique
   description String?
   website     String?
   address     String?

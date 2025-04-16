@@ -30,10 +30,10 @@ app.get('/healthcheck', (_, res) => {
 
 // Import routes
 import userRoutes from './routes/user.route.js';
-import { env } from './config/env.js';
+import companyRoutes from './routes/company.route.js';
 
-// User routes
-app.use('/api/v1', userRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/companies', companyRoutes);
 
 // 404 handler
 app.use('*', (_, res) => {

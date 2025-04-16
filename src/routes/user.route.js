@@ -1,15 +1,14 @@
 import * as UserController from '../controllers/user.controller.js';
 import { Router } from 'express';
-import { validate } from '../middlewares/validate.middleware.js';
 
 const router = Router();
 
+router.get('/', UserController.getAllUsers);
 router.post('/register', UserController.registerUser);
 router.post('/login', UserController.loginUser);
-router.get('/users', UserController.getAllUsers);
-router.get('/users/:id', UserController.getUserById);
-router.get('/users/:username', UserController.getUserByUsername);
-router.put('/users/:id', UserController.updateUser);
-router.delete('/users/:id', UserController.deleteUser);
+router.get('/:id', UserController.getUserById);
+router.get('/:username', UserController.getUserByUsername);
+router.put('/:id', UserController.updateUser);
+router.delete('/:id', UserController.deleteUser);
 
 export default router;

@@ -3,10 +3,14 @@ import { prisma } from '../db/db.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { checkExistingUser } from '../utils/checkExistingUser.js';
 import { generateToken } from '../utils/jwt.js';
-import { createUserSchema, loginUserSchema, updateUserSchema } from '../validators/user.validator.js';
+import {
+    registerUserSchema,
+    loginUserSchema,
+    updateUserSchema,
+} from '../validators/user.validator.js';
 
 export const registerUser = asyncHandler(async (req, res) => {
-    const { username, email, password, name } = createUserSchema.parse(req.body);
+    const { username, email, password, name } = registerUserSchema.parse(req.body);
     const userExist = await checkExistingUser(username, email);
     if (userExist) {
         return res.status(409).json({
@@ -51,7 +55,7 @@ export const loginUser = asyncHandler(async (req, res) => {
         });
     }
 
-    const JWTtoken = generateToken({ id: user.id });
+    const JWTtoken = generateToken({ id: user.id, role: 'STUDENT' });
 
     return res
         .status(200)
@@ -71,6 +75,20 @@ export const loginUser = asyncHandler(async (req, res) => {
 
 export const getAllUsers = asyncHandler(async (req, res) => {
     const users = await prisma.student.findMany();
+    if (!users) {
+        return res.status(404).json({
+            success: false,
+            message: 'Users not found',
+            data: null,
+        });
+    }
+    if (users.length === 0) {
+        return res.status(404).json({
+            success: false,
+            message: 'No users found',
+            data: null,
+        });
+    }
     return res.status(200).json({
         success: true,
         message: 'Users fetched successfully',
@@ -106,6 +124,8 @@ export const getUserById = asyncHandler(async (req, res) => {
     });
 });
 
+// TODO: add validation for update user (check if data already exists)
+
 export const updateUser = asyncHandler(async (req, res) => {
     const { id } = req.params;
     if (!id) {
@@ -129,6 +149,12 @@ export const updateUser = asyncHandler(async (req, res) => {
         currentYear,
         gradYear,
     } = updateUserSchema.parse(req.body);
+
+    // const user = await prisma.user.findUnique({
+    //     where: {
+    //         OR: [{ username }, { email }],
+    //     },
+    // });
 
     const user = await prisma.student.update({
         where: {
@@ -158,11 +184,25 @@ export const updateUser = asyncHandler(async (req, res) => {
 
 export const deleteUser = asyncHandler(async (req, res) => {
     const { id } = req.params;
+    if (!id) {
+        return res.status(400).json({
+            success: false,
+            message: 'id is required',
+            data: null,
+        });
+    }
     const user = await prisma.student.delete({
         where: {
             id,
         },
     });
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: 'User not found',
+            data: null,
+        });
+    }
     return res.status(200).json({
         success: true,
         message: 'User deleted successfully',
@@ -172,6 +212,13 @@ export const deleteUser = asyncHandler(async (req, res) => {
 
 export const getUserByUsername = asyncHandler(async (req, res) => {
     const { username } = req.params;
+    if (!username) {
+        return res.status(400).json({
+            success: false,
+            message: 'username is required',
+            data: null,
+        });
+    }
     const user = await prisma.student.findUnique({
         where: {
             username,
