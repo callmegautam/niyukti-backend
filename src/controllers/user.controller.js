@@ -3,9 +3,10 @@ import { prisma } from '../db/db.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { checkExistingUser } from '../utils/checkExistingUser.js';
 import { generateToken } from '../utils/jwt.js';
+import { createUserSchema, loginUserSchema, updateUserSchema } from '../validators/user.validator.js';
 
 export const registerUser = asyncHandler(async (req, res) => {
-    const { username, name, email, password } = req.body;
+    const { username, email, password, name } = createUserSchema.parse(req.body);
     const userExist = await checkExistingUser(username, email);
     if (userExist) {
         return res.status(409).json({
@@ -34,7 +35,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password } = loginUserSchema.parse(req.body);
+
     const user = await checkExistingUser(null, email);
     if (!user) {
         return res.status(401).json({
@@ -126,7 +128,7 @@ export const updateUser = asyncHandler(async (req, res) => {
         admissionYear,
         currentYear,
         gradYear,
-    } = req.body;
+    } = updateUserSchema.parse(req.body);
 
     const user = await prisma.user.update({
         where: {
