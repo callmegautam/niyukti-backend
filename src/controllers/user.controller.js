@@ -14,7 +14,7 @@ export const registerUser = asyncHandler(async (req, res) => {
             message: 'User already exists with this email or username',
         });
     }
-    const user = await prisma.user.create({
+    const user = await prisma.student.create({
         data: {
             username,
             name,
@@ -70,7 +70,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 });
 
 export const getAllUsers = asyncHandler(async (req, res) => {
-    const users = await prisma.user.findMany();
+    const users = await prisma.student.findMany();
     return res.status(200).json({
         success: true,
         message: 'Users fetched successfully',
@@ -87,7 +87,7 @@ export const getUserById = asyncHandler(async (req, res) => {
             data: null,
         });
     }
-    const user = await prisma.user.findUnique({
+    const user = await prisma.student.findUnique({
         where: {
             id,
         },
@@ -130,7 +130,7 @@ export const updateUser = asyncHandler(async (req, res) => {
         gradYear,
     } = updateUserSchema.parse(req.body);
 
-    const user = await prisma.user.update({
+    const user = await prisma.student.update({
         where: {
             id,
         },
@@ -158,7 +158,7 @@ export const updateUser = asyncHandler(async (req, res) => {
 
 export const deleteUser = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const user = await prisma.user.delete({
+    const user = await prisma.student.delete({
         where: {
             id,
         },
@@ -172,7 +172,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
 
 export const getUserByUsername = asyncHandler(async (req, res) => {
     const { username } = req.params;
-    const user = await prisma.user.findUnique({
+    const user = await prisma.student.findUnique({
         where: {
             username,
         },
