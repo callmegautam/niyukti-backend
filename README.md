@@ -38,7 +38,7 @@ This repository contains the **backend code** for Niyukti.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/old-niyukti-backend.git
+git clone https://github.com/callmegautam/old-niyukti-backend.git
 cd old-niyukti-backend
 
 # Install dependencies
